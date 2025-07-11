@@ -6,14 +6,14 @@ const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
 const app = express();
-const port = process.env.PORT || 3006;
+const port = process.env.PORT || 3057;
 
 // PostgreSQL connection
 const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'postgres',
   database: process.env.DB_NAME || 'new_employee_db',
-  password: process.env.DB_PASSWORD || 'Password@12345',
+  password: process.env.DB_PASSWORD || 'admin123',
   port: process.env.DB_PORT || 5432,
 });
 
@@ -54,13 +54,13 @@ const upload = multer({
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
-    "http://localhost:3001",
+    "http://3.110.212.246:3057",
     "http://127.0.0.1:5500",
     "http://localhost:5500",
     "http://127.0.0.1:5501",
     "http://127.0.0.1:5503",
-    "http://localhost:8081",
-    "http://localhost:8089",
+    "http://3.110.212.246:8172",
+    "http://3.110.212.246:8173",
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -220,5 +220,5 @@ app.get('/hr', (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on http://3.110.212.246${port}`);
 });
