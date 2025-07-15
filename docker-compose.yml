@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:14
+    container_name: postgres_container81
+    hostname: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: new_employee_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "6619:5432"  # Changed to standard port
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: backend_container8
+    ports:
+      - "3060:3060"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_USER: postgres
+      DB_HOST: postgres
+      DB_NAME: new_employee_db
+      DB_PASSWORD: admin123
+      DB_PORT: 5432
+      PORT: 3060
+      FRONTEND_URL: http//13.203.228.93:8176
+    volumes:
+      - ./Backend/Uploads:/app/Uploads  # Persistent storage for uploads
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: frontend_container8
+    ports:
+      - "8176:80"
+    depends_on:
+      - backend
+
+  hr_page:
+    build:
+      context: ./HR_page
+      dockerfile: Dockerfile
+    container_name: hr_container8
+    ports:
+      - "8177:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
