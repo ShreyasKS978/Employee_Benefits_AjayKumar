@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const path = require('path');
 const cors = require('cors');
 const app = express();
-const port = process.env.PORT || 3057;
+const port = process.env.PORT || 3060;
 
 // PostgreSQL connection
 app.use(cors());
@@ -20,12 +20,12 @@ const pool = new Pool({
 app.use(cors({
   origin: [
     process.env.FRONTEND_URL,
-    "http://3.110.212.246:3057",
+    "http://13.203.228.93:3060",
     "http://127.0.0.1:5500",
     "http://localhost:5500",
     "http://127.0.0.1:5501", // Added to fix CORS error
-    "http://3.110.212.246:8172", // Added for future port flexibility
-    "http://3.110.212.246:8173"  // Added for future port flexibility
+    "http://13.203.228.93:8176", // Added for future port flexibility
+    "http://13.203.228.93:8177"  // Added for future port flexibility
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -130,5 +130,5 @@ app.get('/hr', (req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`Server running on http://3.110.212.246:${port}`);
+  console.log(`Server running on http://13.203.228.93:${port}`);
 });
