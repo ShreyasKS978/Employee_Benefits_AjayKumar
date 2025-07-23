@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     container_name: backend_container8
     ports:
-      - "3060:3060"
+      - "3057:3057"
     depends_on:
       postgres:
         condition: service_healthy
@@ -37,8 +37,8 @@ services:
       DB_NAME: new_employee_db
       DB_PASSWORD: admin123
       DB_PORT: 5432
-      PORT: 3060
-      FRONTEND_URL: http//13.203.228.93:8176
+      PORT: 3057
+      FRONTEND_URL: http//13.203.104.102:8043
     volumes:
       - ./Backend/Uploads:/app/Uploads  # Persistent storage for uploads
 
@@ -48,7 +48,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend_container8
     ports:
-      - "8176:80"
+      - "8043:80"
     depends_on:
       - backend
 
@@ -58,7 +58,7 @@ services:
       dockerfile: Dockerfile
     container_name: hr_container8
     ports:
-      - "8177:80"
+      - "8044:80"
     depends_on:
       - backend
 
