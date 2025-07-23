@@ -746,7 +746,7 @@
     <script>
         class HRDashboardApp {
             constructor() {
-                this.BASE_URL = 'http://3.110.212.246:3057';
+                this.BASE_URL = 'http://13.203.104.102:3057';
                 this.currentRequestId = null;
                 this.currentAction = null;
                 this.allRequests = [];
@@ -858,77 +858,51 @@
             }
 
             displayRequestDetails(request) {
-                // Helper function to safely set content
-                const setContent = (id, content) => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.textContent = content || '-';
-                    }
-                };
-
-                // Set basic request details
-                setContent('detail-name', request.name);
-                setContent('detail-emp-id', request.emp_id);
-                setContent('detail-email', request.email);
-                setContent('detail-program', request.program);
-                setContent('detail-program-time', request.program_time);
-                setContent('detail-date', new Date(request.request_date).toLocaleDateString());
-                setContent('detail-reason', request.reason);
+                document.getElementById('detail-name').textContent = request.name;
+                document.getElementById('detail-emp-id').textContent = request.emp_id;
+                document.getElementById('detail-email').textContent = request.email;
+                document.getElementById('detail-program').textContent = request.program;
+                document.getElementById('detail-program-time').textContent = request.program_time || 'Not specified';
+                document.getElementById('detail-date').textContent = new Date(request.request_date).toLocaleDateString();
                 
-                // Set status with badge
                 const statusElement = document.getElementById('detail-status');
-                if (statusElement) {
-                    statusElement.innerHTML = `<span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span>`;
-                }
+                statusElement.innerHTML = `<span class="status-badge status-${request.status.toLowerCase()}">${request.status}</span>`;
+                
+                document.getElementById('detail-reason').textContent = request.reason || 'Not specified';
 
-                // Handle loan-specific details
                 const loanDetails = document.getElementById('loan-details');
                 if (request.program === 'Employee Loans') {
                     loanDetails.style.display = 'block';
-                    setContent('detail-loan-amount', request.amount ? `₹${parseInt(request.amount).toLocaleString('en-IN')}` : null);
-                    setContent('detail-loan-purpose', request.loan_type);
+                    document.getElementById('detail-loan-amount').textContent = request.amount ? 
+                        `₹${parseInt(request.amount).toLocaleString('en-IN')}` : 'Not specified';
+                    document.getElementById('detail-loan-purpose').textContent = request.loan_type || 'Not specified';
                     
                     const docsElement = document.getElementById('detail-loan-docs');
-                    if (docsElement) {
-                        if (request.document_path) {
-                            const normalizedPath = request.document_path.replace(/\\/g, '/');
-                            const filename = normalizedPath.split('/').pop();
-                            docsElement.innerHTML = `<a href="${this.BASE_URL}/download/${encodeURIComponent(filename)}" target="_blank" class="text-primary">
-                                <i class="fas fa-file-download"></i> Download Document
-                            </a>`;
-                        } else {
-                            docsElement.textContent = 'No documents uploaded';
-                        }
+                    if (request.document_path) {
+                        // Normalize path to handle both forward and backslashes
+                        const normalizedPath = request.document_path.replace(/\\/g, '/');
+                        const filename = normalizedPath.split('/').pop();
+                        docsElement.innerHTML = `<a href="${this.BASE_URL}/download/${encodeURIComponent(filename)}" target="_blank" class="text-primary">
+                            <i class="fas fa-file-download"></i> Download Document
+                        </a>`;
+                    } else {
+                        docsElement.textContent = 'No documents uploaded';
                     }
                 } else {
                     loanDetails.style.display = 'none';
                 }
 
-                // Show the modal
-                const modal = document.getElementById('details-modal');
-                if (modal) {
-                    modal.style.display = 'flex';
-                }
+                document.getElementById('details-modal').style.display = 'flex';
             }
 
             showConfirmationModal(action, requestId) {
                 this.currentAction = action;
                 this.currentRequestId = requestId;
-                
-                const confirmationText = document.getElementById('confirmation-text');
-                if (confirmationText) {
-                    confirmationText.textContent = `Are you sure you want to ${action.toLowerCase()} this request?`;
-                }
-                
+                document.getElementById('confirmation-text').textContent = 
+                    `Are you sure you want to ${action.toLowerCase()} this request?`;
                 const confirmBtn = document.getElementById('confirm-action-btn');
-                if (confirmBtn) {
-                    confirmBtn.onclick = () => this.updateRequestStatus(requestId, action);
-                }
-                
-                const modal = document.getElementById('confirmation-modal');
-                if (modal) {
-                    modal.style.display = 'flex';
-                }
+                confirmBtn.onclick = () => this.updateRequestStatus(requestId, action);
+                document.getElementById('confirmation-modal').style.display = 'flex';
             }
 
             async updateRequestStatus(requestId, status) {
@@ -957,10 +931,7 @@
             }
 
             closeModal(modalId = 'details-modal') {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.style.display = 'none';
-                }
+                document.getElementById(modalId).style.display = 'none';
                 this.currentRequestId = null;
                 this.currentAction = null;
             }
